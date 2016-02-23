@@ -2,6 +2,7 @@
 using BulkInsertNet.Database;
 using BulkInsertNet.Repository;
 using BulkInsertNet.Repository.Dapper;
+using BulkInsertNet.Repository.SQLBulkCopy;
 using BulkInsertNET.Model;
 using System;
 using System.Collections.Generic;
@@ -16,7 +17,23 @@ namespace BulkInsertNet
     {
         static void Main(string[] args)
         {
+            ICategoryRepository categoryRepository = null;
+            IProductRepository productRepository = null;
+
             var connectionString = System.Configuration.ConfigurationManager.ConnectionStrings["BulkInsertNetConnectionString"].ConnectionString;
+ 
+            if  (args.Count() == 0 || args[0] == "-sqlbulkcopy" )
+            {
+                Console.WriteLine("Process with SqlBulkCopy...");
+                categoryRepository = new CategorySQLBulkCopyRepository(connectionString);
+                productRepository = new ProductSQLBulkCopyRepository(connectionString);
+            }
+            else if (args[0] == "-dapper")
+            {
+                Console.WriteLine("Process with dapper...");
+                categoryRepository = new CategoryDapperRepository(connectionString);
+                productRepository = new ProductDapperRepository(connectionString);
+            }
 
             // Delete data from db
             Helper.DeleteAllData(connectionString);
@@ -26,15 +43,8 @@ namespace BulkInsertNet
             var products = ProductBuilder.BuildCollection(10000, categories).ToList();
 
 
-            // Insert with BulkCopy
-
-            // Insert with Dapper
-            ICategoryRepository categoryDapperRepository = new CategoryDapperRepository(connectionString);
-            IProductRepository productDapperRepository = new ProductDapperRepository(connectionString);
-
-            
-            InsertCategories(categoryDapperRepository, categories);
-            InsertProducts(productDapperRepository, products);
+            InsertCategories(categoryRepository, categories);
+            InsertProducts(productRepository, products);
 
             Console.WriteLine("End");
             Console.ReadLine();

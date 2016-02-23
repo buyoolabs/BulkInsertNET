@@ -21,15 +21,17 @@ namespace BulkInsertNet.Repository.Dapper
             using (SqlConnection cnn = new SqlConnection(connectionString))
             {
                 cnn.Open();
+                SqlTransaction trans = cnn.BeginTransaction();
                 foreach (var product in products)
                 {
                     var productId = cnn.Query<int>(@"INSERT Products([Title],[Price],[Stock],[Brand],[IsActive]) VALUES (@Title,@Price,@Stock,@Brand,@IsActive) 
-                                SELECT ProductId FROM Products WHERE ProductId = scope_identity()", product).First();
-                    foreach(var category in product.Categories)
+                                SELECT ProductId FROM Products WHERE ProductId = scope_identity()", product, transaction: trans).First();
+                    foreach (var category in product.Categories)
                     {
-                        cnn.Execute(@"INSERT ProductCategories(ProductId,CategoryId) VALUES (@ProductId,@CategoryId)", new { ProductId = productId, CategoryId = category.CategoryId });
+                        cnn.Execute(@"INSERT ProductCategories(ProductId,CategoryId) VALUES (@ProductId,@CategoryId)", new { ProductId = productId, CategoryId = category.CategoryId }, transaction: trans);
                     }
                 }
+                trans.Commit();
                 cnn.Close();
             }
         }

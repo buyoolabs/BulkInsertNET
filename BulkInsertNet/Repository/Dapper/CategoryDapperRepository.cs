@@ -21,11 +21,13 @@ namespace BulkInsertNet.Repository.Dapper
             using (SqlConnection cnn = new SqlConnection(connectionString))
             {
                 cnn.Open();
+                SqlTransaction trans = cnn.BeginTransaction();
                 for (int i = 0; i < categories.Count(); i++)
                 {
                     categories[i].CategoryId = cnn.Query<int>(@"INSERT Categories(Name,ExternalCode) VALUES (@Name,@ExternalCode)
                                                             SELECT CategoryId FROM Categories WHERE CategoryId = SCOPE_IDENTITY()", categories[i]).First();
                 }
+                trans.Commit();
                 cnn.Close();
             }
         }

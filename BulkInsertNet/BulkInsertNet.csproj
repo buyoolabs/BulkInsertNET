@@ -59,6 +59,7 @@
     <Compile Include="Repository\Dapper\ProductDapperRepository.cs" />
     <Compile Include="Repository\ICategoryRepository.cs" />
     <Compile Include="Repository\IProductRepository.cs" />
+    <Compile Include="Repository\SimpleData\CategorySimpleDataRepository.cs" />
     <Compile Include="Repository\SQLBulkCopy\CategorySQLBulkCopyRepository.cs" />
     <Compile Include="Repository\SQLBulkCopy\ProductSQLBulkCopyRepository.cs" />
     <Compile Include="Repository\SQLBulkCopy\SqlBulkCopyHelper.cs" />

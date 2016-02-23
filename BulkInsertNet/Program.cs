@@ -1,6 +1,7 @@
 ﻿using BulkInsertNet.Builders;
 using BulkInsertNet.Database;
 using BulkInsertNet.Repository;
+using BulkInsertNet.Repository.BulkInserter;
 using BulkInsertNet.Repository.Dapper;
 using BulkInsertNet.Repository.SQLBulkCopy;
 using BulkInsertNET.Model;
@@ -30,9 +31,15 @@ namespace BulkInsertNet
             }
             else if (args[0] == "-dapper")
             {
-                Console.WriteLine("Process with dapper...");
+                Console.WriteLine("Process with Dapper...");
                 categoryRepository = new CategoryDapperRepository(connectionString);
                 productRepository = new ProductDapperRepository(connectionString);
+            }
+            else if (args[0] == "-simplesqlbulkcopy")
+            {
+                Console.WriteLine("Process with SimpleSqlBulkCopy Library...");
+                categoryRepository = new CategorySimpleSqlBulkCopyRepository(connectionString);
+                productRepository = new ProductSimpleSqlBulkCopyRepository(connectionString);
             }
 
             // Delete data from db

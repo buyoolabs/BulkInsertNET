@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace BulkInsertNet.Repository
 {
-    interface IProductRepository
+    public interface IProductRepository
     {
         void BulkInsert(List<Product> products);
     }

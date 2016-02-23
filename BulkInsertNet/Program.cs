@@ -10,6 +10,14 @@ namespace BulkInsertNet
     {
         static void Main(string[] args)
         {
+            //Build data
+
+            //Delete data from db
+
+            //Insert with BulkCopy
+
+            //Insert with Dapper
         }
+    }
     }
 }
